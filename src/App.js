@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import Navigation from './components/Navigation/Navigation';
+import FaceDetection from './components/FaceDetection/FaceDetection';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import Particles from 'react-particles-js';
 import './App.css';
+import Clarifai from 'clarifai';
+
+const app = new Clarifai.App({
+  apiKey: '76b1c66f1b184e219f2844f12156409b'
+});
 
 const particalesoptions = {
   particles: {
@@ -122,11 +128,43 @@ class App extends Component {
     super();
     this.state = {
       input: '',
+      imageUrl: '',
     }
   }
 
   onInputChange = (event) => {
-    console.log(event.target.value);
+    //console.log(event.target.value);
+    //https://www.indezine.com/products/powerpoint/learn/color/images/rgb01.png
+    //https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260
+    this.setState({ input: event.target.value});
+  }
+
+  onButtonSubmit = () => {
+    console.log('clicked');
+    this.setState({ imageUrl: this.state.input });
+    //https://clarifai.com/models  --> face FaceDetection  -> register
+    //https://clarifai.com/developer/guide/  ->client -> js
+
+
+    app.models
+      .predict(
+        //Clarifai.COLOR_MODEL,
+        Clarifai.FACE_DETECT_MODEL,
+        this.state.input)
+        .then(
+      function (response) {
+        // do something with response
+        console.log(response);
+        console.log(response.outputs[0].data.regions[0].region_info.bounding_box)
+      },
+      function (err) {
+        // there was an error
+      }
+    );
+
+
+
+
   }
 
   render() {
@@ -138,8 +176,8 @@ class App extends Component {
         <Navigation />
         <Logo />
         <Rank />
-        <ImageLinkForm onInputChange={this.onInputChange} />
-        {/* <FaceDetection /> */}
+        <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+        <FaceDetection imageUrl={this.state.imageUrl} />
       </div>
     );
   }

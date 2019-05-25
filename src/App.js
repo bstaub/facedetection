@@ -3,6 +3,7 @@ import Navigation from './components/Navigation/Navigation';
 import FaceDetection from './components/FaceDetection/FaceDetection';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import Signin from './components/Singin/Signin';
 import Rank from './components/Rank/Rank';
 import Particles from 'react-particles-js';
 import './App.css';
@@ -183,6 +184,7 @@ class App extends Component {
           params={particalesoptions} className='particales'
         />
         <Navigation />
+        <Signin />
         <Logo />
         <Rank />
         <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />

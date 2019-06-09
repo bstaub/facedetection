@@ -1,5 +1,6 @@
 import React from 'react';
 import './Signin.css';
+import api from '../../api';
 
 //http://tachyons.io/components/forms/sign-in/index.html
 //http://tachyons.io/components/cards/product-card/index.html
@@ -25,23 +26,23 @@ class Signin extends React.Component {
   onLoginSubmit = () => {
     //console.log(this.state);
 
-    fetch('http://localhost:3001/signin', {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            user: this.state.signInEmail,
-            pass: this.state.signInPassword 
-        })
-      }
-    ).then(response => response.json())
-    .then( backendDataStatus => {
-      if (backendDataStatus === 'success login') {
-        this.props.onRouteChange('home')
-      } else {
-        console.log('login failed')
-      }
+    fetch(api.signin, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user: this.state.signInEmail,
+        pass: this.state.signInPassword
+      })
     })
-    .catch(error => console.error('API Error:', error));
+      .then(response => response.json())
+      .then(backendDataStatus => {
+        if (backendDataStatus === 'success login') {
+          this.props.onRouteChange('home');
+        } else {
+          console.log('login failed');
+        }
+      })
+      .catch(error => console.error('API Error:', error));
 
   }
 

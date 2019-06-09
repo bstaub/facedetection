@@ -126,7 +126,7 @@ const particalesoptions = {
 };
 
 class App extends Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
       input: '',
@@ -134,7 +134,24 @@ class App extends Component {
       box: [],
       route: 'signin',
       isSignedIn: false,
-    }
+      user: {
+        id: '',
+        user: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
+    };
+  }
+
+  loadUser = (data) => {
+    this.setState( {user: {
+      id: data.id,
+      user: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined,
+    }});
   }
 
   // componentDidMount(){
@@ -143,8 +160,9 @@ class App extends Component {
   //     .then(console.log);
   // }
 
-  calculateFaceLocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+  calculateFaceLocation = data => {
+    const clarifaiFace =
+      data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
@@ -152,22 +170,22 @@ class App extends Component {
     return {
       leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height),
-    }
-  }
+      rightCol: width - clarifaiFace.right_col * width,
+      bottomRow: height - clarifaiFace.bottom_row * height
+    };
+  };
 
-  displayFacebox = (box) => {
-    this.setState({box: box});
+  displayFacebox = box => {
+    this.setState({ box: box });
     console.log(box);
-  }
+  };
 
-  onInputChange = (event) => {
+  onInputChange = event => {
     //console.log(event.target.value);
     //https://www.indezine.com/products/powerpoint/learn/color/images/rgb01.png
     //https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260
-    this.setState({ input: event.target.value});
-  }
+    this.setState({ input: event.target.value });
+  };
 
   onButtonSubmit = () => {
     console.log('clicked');
@@ -175,25 +193,27 @@ class App extends Component {
     //https://clarifai.com/models  --> face FaceDetection  -> register
     //https://clarifai.com/developer/guide/  ->client -> js
 
-
     app.models
       .predict(
         //Clarifai.COLOR_MODEL,
         Clarifai.FACE_DETECT_MODEL,
-        this.state.input)
-        //return Wert von calculateFaceLocation wird an displayFacebox übergeben!
-        .then(response => this.displayFacebox(this.calculateFaceLocation(response)))
-        .catch(err => console.log(err));
-  }
+        this.state.input
+      )
+      //return Wert von calculateFaceLocation wird an displayFacebox übergeben!
+      .then(response =>
+        this.displayFacebox(this.calculateFaceLocation(response))
+      )
+      .catch(err => console.log(err));
+  };
 
-  onRouteChange = (route) => {
+  onRouteChange = route => {
     if (route === 'signout') {
       this.setState({ isSignedIn: false });
-    } else if (route === 'home'){
+    } else if (route === 'home') {
       this.setState({ isSignedIn: true });
     }
-    this.setState({route: route});
-  }
+    this.setState({ route: route });
+  };
 
   render() {
     const { isSignedIn, route, box, imageUrl } = this.state;
@@ -213,15 +233,12 @@ class App extends Component {
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
             />
-            <FaceDetection
-              box={box}
-              imageUrl={imageUrl}
-            />
+            <FaceDetection box={box} imageUrl={imageUrl} />
           </div>
         ) : route === 'signin' ? (
           <Signin onRouteChange={this.onRouteChange} />
         ) : (
-          <Register onRouteChange={this.onRouteChange} />
+          <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         )}
       </div>
     );

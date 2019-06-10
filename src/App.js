@@ -137,7 +137,7 @@ class App extends Component {
       isSignedIn: false,
       user: {
         id: '',
-        user: '',
+        name: '',
         email: '',
         entries: 0,
         joined: ''
@@ -146,13 +146,15 @@ class App extends Component {
   }
 
   loadUser = (data) => {
-    this.setState( {user: {
-      id: data.id,
-      user: data.user,
-      email: data.email,
-      entries: data.entries,
-      joined: data.joined,
-    }});
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined
+      }
+    });
   }
 
   // componentDidMount(){
@@ -211,11 +213,11 @@ class App extends Component {
             })
           })
             .then(response => response.json())
-            .then(counter => {
-              //if (counter) {
-                //this.setState({ user: { entries: counter} }); //verliert Namen, weil user überschriebn wird, daher..
-                this.setState(Object.assign(this.state.user, { entries: counter} ))  //Object erweitern!
-              //}
+            .then(count => {
+              //this.setState({ user: { entries: counter} }); //verliert Namen, weil user überschriebn wird, daher..
+              this.setState(
+                Object.assign(this.state.user, { entries: count })
+              );
             })
             .catch(error => console.error('API Error:', error));
 

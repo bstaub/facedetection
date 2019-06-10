@@ -5,7 +5,7 @@ const Rank = ({userObj}) => {
   return (
   <div>
     <div className='white f3'>
-      {`${userObj.user}, deine Image Tracking Anzahl ist ...`}
+      {`${userObj.name}, deine Image Tracking Anzahl ist ...`}
     </div>
     <div className='white f1'>
       {userObj.entries}

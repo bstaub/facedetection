@@ -30,13 +30,14 @@ class Signin extends React.Component {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        user: this.state.signInEmail,
+        email: this.state.signInEmail,
         pass: this.state.signInPassword
       })
     })
       .then(response => response.json())
-      .then(backendDataStatus => {
-        if (backendDataStatus === 'success login') {
+      .then(signedInUser => {
+        if (signedInUser.email === this.state.signInEmail) {
+          this.props.loadUser(signedInUser);
           this.props.onRouteChange('home');
         } else {
           console.log('login failed');

@@ -147,7 +147,7 @@ class App extends Component {
   loadUser = (data) => {
     this.setState( {user: {
       id: data.id,
-      user: data.name,
+      user: data.user,
       email: data.email,
       entries: data.entries,
       joined: data.joined,
@@ -210,6 +210,7 @@ class App extends Component {
     if (route === 'signout') {
       this.setState({ isSignedIn: false });
     } else if (route === 'home') {
+      //console.log(this.state.user);
       this.setState({ isSignedIn: true });
     }
     this.setState({ route: route });
@@ -228,7 +229,7 @@ class App extends Component {
         {route === 'home' ? (
           <div>
             <Logo />
-            <Rank />
+            <Rank userObj={this.state.user}/>
             <ImageLinkForm
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
@@ -236,7 +237,7 @@ class App extends Component {
             <FaceDetection box={box} imageUrl={imageUrl} />
           </div>
         ) : route === 'signin' ? (
-          <Signin onRouteChange={this.onRouteChange} />
+            <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         ) : (
           <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         )}

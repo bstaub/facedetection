@@ -1,14 +1,14 @@
 import React from 'react';
 import './Rank.css';
 
-const Rank = props => {
+const Rank = ({userObj}) => {
   return (
   <div>
     <div className='white f3'>
-      {'Bruno, deine aktueller Rang ist ....'}
+      {`${userObj.user}, deine aktueller Rang ist ...`}
     </div>
     <div className='white f1'>
-      {'#5'}
+      {userObj.entries}
     </div>
     
   </div>

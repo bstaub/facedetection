@@ -9,6 +9,7 @@ import Rank from './components/Rank/Rank';
 import Particles from 'react-particles-js';
 import './App.css';
 import Clarifai from 'clarifai';
+import api from './api';
 
 const app = new Clarifai.App({
   apiKey: '76b1c66f1b184e219f2844f12156409b'
@@ -200,9 +201,28 @@ class App extends Component {
         this.state.input
       )
       //return Wert von calculateFaceLocation wird an displayFacebox übergeben!
-      .then(response =>
-        this.displayFacebox(this.calculateFaceLocation(response))
-      )
+      .then(response => {
+          
+          fetch(api.image, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          })
+            .then(response => response.json())
+            .then(counter => {
+              //if (counter) {
+                //this.setState({ user: { entries: counter} }); //verliert Namen, weil user überschriebn wird, daher..
+                this.setState(Object.assign(this.state.user, { entries: counter} ))  //Object erweitern!
+              //}
+            })
+            .catch(error => console.error('API Error:', error));
+
+
+
+          this.displayFacebox(this.calculateFaceLocation(response));
+      })
       .catch(err => console.log(err));
   };
 
